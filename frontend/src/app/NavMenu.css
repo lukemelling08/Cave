@@ -1,20 +1,23 @@
-/* Panel: slides in from the left. Entry uses @starting-style; exit keeps the
-   dialog in the top layer (overlay, display) until the slide-out finishes. */
+/* Panel: a compact square menu in the top-left corner that slides in from
+   the left. Entry uses @starting-style; exit keeps the dialog in the top
+   layer (overlay, display) until the slide-out finishes. */
 
 .app-nav {
   --_slide: var(--cave-duration-slow);
 
   position: fixed;
-  inset: 0 auto 0 0;
-  width: min(320px, 85vw);
+  inset: 0 auto auto 0;
+  width: min(260px, 85vw);
   max-width: none;
-  height: 100dvh;
-  max-height: none;
+  height: auto;
+  max-height: 100dvh;
   margin: 0;
   padding: 0;
+  overflow: auto;
   border: 0;
   border-right: 1px solid var(--cave-border);
-  border-radius: 0 var(--cave-radius-xl) var(--cave-radius-xl) 0;
+  border-bottom: 1px solid var(--cave-border);
+  border-radius: 0;
   background-color: var(--cave-surface-raised);
   color: var(--cave-text);
   box-shadow: var(--cave-shadow-overlay);
@@ -54,27 +57,34 @@
   }
 }
 
+/* Same padding as the header, so the close button lands exactly where the
+   menu button was. */
 .app-nav__inner {
   display: grid;
-  align-content: start;
-  gap: var(--cave-space-4);
-  min-height: 100%;
-  padding: calc(var(--cave-space-2) + env(safe-area-inset-top)) var(--cave-space-4)
-    calc(var(--cave-space-6) + env(safe-area-inset-bottom))
+  gap: var(--cave-space-2);
+  padding: env(safe-area-inset-top) var(--cave-space-4) var(--cave-space-4)
     max(var(--cave-space-4), env(safe-area-inset-left));
 }
 
-/* Close button sits where the menu button was, so it reads as the same control. */
 .app-nav__header {
   display: flex;
   align-items: center;
-  gap: var(--cave-space-3);
-  min-height: 48px;
+  min-height: 56px;
+}
+
+@media (min-width: 768px) {
+  .app-nav__inner {
+    padding-inline-start: var(--cave-space-8);
+  }
+
+  .app-nav__header {
+    min-height: 64px;
+  }
 }
 
 .app-nav__list {
   display: grid;
-  gap: var(--cave-space-2);
+  gap: var(--cave-space-1);
   padding: 0;
   list-style: none;
 }
@@ -100,56 +110,54 @@
   }
 }
 
-/* Pages you can go to glow with Ember. Labels stay Slate for contrast. */
+/* Plain text links with a small icon. Pages you can go to are lit: the
+   label and icon carry a real Ember glow. Labels keep the text colour so they
+   stay readable on light backgrounds. */
 .app-nav__item {
+  --_halo: color-mix(in srgb, var(--cave-glow) 75%, transparent);
+  --_halo-wide: color-mix(in srgb, var(--cave-glow) 40%, transparent);
+
   display: flex;
   align-items: center;
   gap: var(--cave-space-3);
   width: 100%;
-  min-height: 56px;
-  padding: var(--cave-space-2) var(--cave-space-4) var(--cave-space-2) var(--cave-space-2);
-  border: 1px solid var(--cave-glow-border);
-  border-radius: var(--cave-radius-lg);
-  background-color: var(--cave-glow-soft);
+  min-height: var(--cave-touch-target);
+  padding: 0 var(--cave-space-2);
+  border: 0;
+  border-radius: var(--cave-radius-sm);
+  background: none;
   color: var(--cave-text);
   font-size: var(--cave-font-size-lg);
   font-weight: var(--cave-weight-medium);
   text-align: left;
-  transition:
-    box-shadow var(--cave-duration) var(--cave-ease),
-    border-color var(--cave-duration) var(--cave-ease);
 }
 
 .app-nav__icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--cave-radius-md);
-  background-color: var(--cave-glow);
-  color: var(--cave-on-glow);
-  transition: background-color var(--cave-duration) var(--cave-ease);
+  color: var(--cave-glow);
+  filter: drop-shadow(0 0 3px var(--_halo)) drop-shadow(0 0 8px var(--_halo-wide));
 }
 
-.app-nav__item:hover:not([aria-current='page']) {
-  border-color: var(--cave-glow);
-  box-shadow: 0 0 0 4px var(--cave-glow-soft);
+.app-nav__label {
+  text-shadow:
+    0 0 6px var(--_halo),
+    0 0 16px var(--_halo-wide);
 }
 
 .app-nav__item:active:not([aria-current='page']) {
-  box-shadow: inset 0 0 0 999px var(--cave-hover-overlay);
+  background-color: var(--cave-hover-overlay);
 }
 
-/* The current page is greyed out. */
+/* The current page is greyed out and unlit. */
 .app-nav__item[aria-current='page'] {
-  border-color: transparent;
-  background-color: var(--cave-hover-overlay);
   color: var(--cave-text-muted);
   cursor: default;
 }
 
 .app-nav__item[aria-current='page'] .app-nav__icon {
-  background-color: var(--cave-hover-overlay);
   color: var(--cave-text-muted);
+  filter: none;
+}
+
+.app-nav__item[aria-current='page'] .app-nav__label {
+  text-shadow: none;
 }

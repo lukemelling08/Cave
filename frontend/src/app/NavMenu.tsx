@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
-import { Icon, IconButton, Logo } from '../components'
+import { Icon, IconButton } from '../components'
 import { pages, type Route } from './routes'
 import './NavMenu.css'
 
@@ -44,7 +44,6 @@ export function NavMenu({ id, open, onClose, current, onNavigate }: NavMenuProps
       <div className="app-nav__inner">
         <div className="app-nav__header">
           <IconButton icon="close" aria-label="Close menu" onClick={onClose} />
-          <Logo type="lockup" size={28} label="" aria-hidden="true" />
         </div>
 
         <nav aria-label="Main">
@@ -62,10 +61,8 @@ export function NavMenu({ id, open, onClose, current, onNavigate }: NavMenuProps
                       onClose()
                     }}
                   >
-                    <span className="app-nav__icon">
-                      <Icon name={page.icon} size={22} />
-                    </span>
-                    {page.label}
+                    <Icon name={page.icon} size={20} className="app-nav__icon" />
+                    <span className="app-nav__label">{page.label}</span>
                   </button>
                 </li>
               )
