@@ -1,0 +1,46 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  /* Clear the notch or status bar when installed full screen. */
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--cave-border);
+  background-color: var(--cave-surface);
+}
+
+.app-header__inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--cave-space-2);
+  max-width: 1200px;
+  min-height: 56px;
+  margin: 0 auto;
+  padding: 0 max(var(--cave-space-4), env(safe-area-inset-right)) 0
+    max(var(--cave-space-4), env(safe-area-inset-left));
+}
+
+.app-header__start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.app-header__end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app-header__logo .cave-logo__img {
+  height: 28px;
+}
+
+@media (min-width: 768px) {
+  .app-header__inner {
+    min-height: 64px;
+    padding-inline: var(--cave-space-8);
+  }
+
+  .app-header__logo .cave-logo__img {
+    height: 32px;
+  }
+}

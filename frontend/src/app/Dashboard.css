@@ -1,0 +1,16 @@
+.app-dashboard {
+  display: grid;
+  align-content: start;
+  gap: var(--cave-space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--cave-space-6) max(var(--cave-space-4), env(safe-area-inset-right))
+    calc(var(--cave-space-8) + env(safe-area-inset-bottom))
+    max(var(--cave-space-4), env(safe-area-inset-left));
+}
+
+@media (min-width: 768px) {
+  .app-dashboard {
+    padding: var(--cave-space-8);
+  }
+}
