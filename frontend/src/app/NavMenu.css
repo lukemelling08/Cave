@@ -1,0 +1,155 @@
+/* Panel: slides in from the left. Entry uses @starting-style; exit keeps the
+   dialog in the top layer (overlay, display) until the slide-out finishes. */
+
+.app-nav {
+  --_slide: var(--cave-duration-slow);
+
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(320px, 85vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--cave-border);
+  border-radius: 0 var(--cave-radius-xl) var(--cave-radius-xl) 0;
+  background-color: var(--cave-surface-raised);
+  color: var(--cave-text);
+  box-shadow: var(--cave-shadow-overlay);
+  overscroll-behavior: contain;
+  transform: translateX(-100%);
+  transition:
+    transform var(--_slide) var(--cave-ease),
+    overlay var(--_slide) allow-discrete,
+    display var(--_slide) allow-discrete;
+}
+
+.app-nav[open] {
+  transform: translateX(0);
+}
+
+@starting-style {
+  .app-nav[open] {
+    transform: translateX(-100%);
+  }
+}
+
+.app-nav::backdrop {
+  background-color: transparent;
+  transition:
+    background-color var(--_slide) var(--cave-ease),
+    overlay var(--_slide) allow-discrete,
+    display var(--_slide) allow-discrete;
+}
+
+.app-nav[open]::backdrop {
+  background-color: var(--cave-backdrop);
+}
+
+@starting-style {
+  .app-nav[open]::backdrop {
+    background-color: transparent;
+  }
+}
+
+.app-nav__inner {
+  display: grid;
+  align-content: start;
+  gap: var(--cave-space-4);
+  min-height: 100%;
+  padding: calc(var(--cave-space-2) + env(safe-area-inset-top)) var(--cave-space-4)
+    calc(var(--cave-space-6) + env(safe-area-inset-bottom))
+    max(var(--cave-space-4), env(safe-area-inset-left));
+}
+
+/* Close button sits where the menu button was, so it reads as the same control. */
+.app-nav__header {
+  display: flex;
+  align-items: center;
+  gap: var(--cave-space-3);
+  min-height: 48px;
+}
+
+.app-nav__list {
+  display: grid;
+  gap: var(--cave-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+/* Items fade and slide in one after another once the panel opens. */
+.app-nav__list > li {
+  transition:
+    opacity var(--cave-duration-slow) var(--cave-ease),
+    transform var(--cave-duration-slow) var(--cave-ease);
+  transition-delay: calc(var(--cave-duration-fast) * 0.5 + var(--i) * 50ms);
+}
+
+@starting-style {
+  .app-nav[open] .app-nav__list > li {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-nav__list > li {
+    transition: none;
+  }
+}
+
+/* Pages you can go to glow with Ember. Labels stay Slate for contrast. */
+.app-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--cave-space-3);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--cave-space-2) var(--cave-space-4) var(--cave-space-2) var(--cave-space-2);
+  border: 1px solid var(--cave-glow-border);
+  border-radius: var(--cave-radius-lg);
+  background-color: var(--cave-glow-soft);
+  color: var(--cave-text);
+  font-size: var(--cave-font-size-lg);
+  font-weight: var(--cave-weight-medium);
+  text-align: left;
+  transition:
+    box-shadow var(--cave-duration) var(--cave-ease),
+    border-color var(--cave-duration) var(--cave-ease);
+}
+
+.app-nav__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--cave-radius-md);
+  background-color: var(--cave-glow);
+  color: var(--cave-on-glow);
+  transition: background-color var(--cave-duration) var(--cave-ease);
+}
+
+.app-nav__item:hover:not([aria-current='page']) {
+  border-color: var(--cave-glow);
+  box-shadow: 0 0 0 4px var(--cave-glow-soft);
+}
+
+.app-nav__item:active:not([aria-current='page']) {
+  box-shadow: inset 0 0 0 999px var(--cave-hover-overlay);
+}
+
+/* The current page is greyed out. */
+.app-nav__item[aria-current='page'] {
+  border-color: transparent;
+  background-color: var(--cave-hover-overlay);
+  color: var(--cave-text-muted);
+  cursor: default;
+}
+
+.app-nav__item[aria-current='page'] .app-nav__icon {
+  background-color: var(--cave-hover-overlay);
+  color: var(--cave-text-muted);
+}

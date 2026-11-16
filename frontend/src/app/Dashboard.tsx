@@ -1,9 +1,5 @@
-import './Dashboard.css'
+import { Page } from './Page'
 
 export function Dashboard() {
-  return (
-    <main className="app-dashboard">
-      <h1 className="cave-visually-hidden">Dashboard</h1>
-    </main>
-  )
+  return <Page title="Dashboard" />
 }
